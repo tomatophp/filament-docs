@@ -1,0 +1,29 @@
+{
+    "name": "FilamentDocs",
+    "alias": "filament-docs",
+    "description": {
+        "ar": "Manage your documents and contracts all in one place with template builder",
+        "en": "Manage your documents and contracts all in one place with template builder",
+        "gr": "Manage your documents and contracts all in one place with template builder",
+        "sp": "Manage your documents and contracts all in one place with template builder"
+    },
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "TomatoPHP\\FilamentDocs\\FilamentDocsServiceProvider"
+    ],
+    "files": [],
+    "title": {
+        "ar": "Documents Editor",
+        "en": "Documents Editor",
+        "gr": "Documents Editor",
+        "sp": "Documents Editor"
+    },
+    "color": "#007dff",
+    "icon": "heroicon-c-arrow-trending-up",
+    "placeholder": "https://raw.githubusercontent.com/tomatophp/filament-docs/master/arts/3x1io-tomato-docs.jpg",
+    "type": "plugin",
+    "version": "v1.0.0",
+    "github" : "https://github.com/tomatophp/filament-docs",
+    "docs" : "https://github.com/tomatophp/filament-docs"
+}

@@ -1,0 +1,44 @@
+{
+    "name": "tomatophp/filament-docs",
+    "type": "library",
+    "description": "Manage your documents and contracts all in one place with template builder",
+    "keywords": [
+        "php",
+        "laravel",
+        "template",
+        "filament",
+        "document",
+        "contract"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TomatoPHP\\FilamentDocs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TomatoPHP\\FilamentDocs\\FilamentDocsServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Fady Mondy",
+            "email": "info@3x1.io"
+        }
+    ],
+    "require": {
+        "php": "^8.1|^8.2",
+        "tomatophp/console-helpers": "^1.1",
+        "tomatophp/filament-icons": "^1.1",
+        "filament/filament": "^3.2",
+        "awcodes/filament-tiptap-editor": "^3.4"
+    }
+}
