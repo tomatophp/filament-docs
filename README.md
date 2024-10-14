@@ -50,7 +50,6 @@ if you are not using this package as a plugin please register the plugin on `/ap
 ```php
 ->plugin(
     \TomatoPHP\FilamentDocs\FilamentDocsPlugin::make()
-        ->isScopedToTenant() // if you want to use this plugin as a tenant
 )
 ```
 
@@ -99,6 +98,63 @@ public function boot()
 ```
 
 as you can see you can use data from selected table or from a static function
+
+
+## Allow Tenants 
+
+to allow tenants just use this method
+
+```php
+->plugin(
+    \TomatoPHP\FilamentDocs\FilamentDocsPlugin::make()
+        ->isScopedToTenant()
+)
+```
+
+and add this migration 
+
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('documents', function (Blueprint $table) {
+            $table->foreignId('team_id')->nullable()->constrained('teams')->onDelete('cascade');
+        });
+        
+        Schema::table('document_templates', function (Blueprint $table) {
+            $table->foreignId('team_id')->nullable()->constrained('teams')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('documents', function (Blueprint $table) {
+            $table->dropForeign(['team_id']);
+            $table->dropColumn('team_id');
+        });
+        
+        Schema::table('document_templates', function (Blueprint $table) {
+            $table->dropForeign(['team_id']);
+            $table->dropColumn('team_id');
+        });
+    }
+};
+
+```
 
 ## Publish Assets
 

@@ -38,7 +38,7 @@ class FilamentDocsInstall extends Command
     {
         $this->info('Publish Vendor Assets');
         $this->artisanCommand(["migrate"]);
-        $this->artisanCommand(["optimize"]);
+        $this->artisanCommand(["optimize:clear"]);
         $this->artisanCommand(["filament:optimize-clear"]);
         $this->artisanCommand(["icon:cache"]);
         $this->info('Filament Docs installed successfully.');

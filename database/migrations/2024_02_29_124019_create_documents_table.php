@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('team_id')->nullable()->constrained('teams')->onDelete('cascade');
-
             $table->string('ref')->nullable()->index();
 
             $table->string('model_type')->nullable();
