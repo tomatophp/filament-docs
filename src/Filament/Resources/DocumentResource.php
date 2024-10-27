@@ -192,7 +192,7 @@ class DocumentResource extends Resource
                     ->label(trans('filament-docs::messages.documents.form.document_template_id'))
                     ->url(fn($record) => DocumentTemplateResource::getUrl('edit', ['record'=>$record->documentTemplate->id]))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('model.name')
+                Tables\Columns\TextColumn::make('model'.config('filament-docs.displayname_attribute'))
                     ->label(trans('filament-docs::messages.documents.form.model'))
                     ->badge()
                     ->color('info')
