@@ -39,7 +39,7 @@ class DocumentTemplate extends Model
      */
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Team::class, 'team_id');
+        return $this->belongsTo(config('filament-docs.team_model'), 'team_id');
     }
 
 
