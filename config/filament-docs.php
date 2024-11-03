@@ -1,7 +1,8 @@
 <?php
 
 return [
-    "team_model" => "App\Models\Team",
+    "team_model" => "App\Models\Team", 
+    "displayname_attribute" =>  "name",
     "dates" => [
         "day" => "D",
         "date" => "Y-m-d",
