@@ -2,6 +2,8 @@
 
 namespace TomatoPHP\FilamentDocs;
 
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use TomatoPHP\FilamentDocs\Filament\RelationManager\DocumentRelationManager;
@@ -57,6 +59,8 @@ class FilamentDocsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //you boot methods here
+        FilamentAsset::register([
+            Css::make('filament-docs', __DIR__.'/../publish/public/css/filament-docs.css')
+        ], package: 'tomatophp/filament-docs');
     }
 }
