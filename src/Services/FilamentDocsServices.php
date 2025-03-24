@@ -5,7 +5,6 @@ namespace TomatoPHP\FilamentDocs\Services;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
 use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
@@ -14,8 +13,11 @@ use TomatoPHP\FilamentDocs\Services\Contracts\DocsVar;
 class FilamentDocsServices
 {
     public array $vars = [];
+
     public ?string $header = null;
+
     public ?string $footer = null;
+
     public ?string $css = null;
 
     public function register(DocsVar | array $var): void
@@ -90,7 +92,6 @@ class FilamentDocsServices
         return $templateBody;
     }
 
-
     public function header(string $header)
     {
         $this->header = $header;
@@ -98,7 +99,7 @@ class FilamentDocsServices
 
     public function getHeader()
     {
-        if($this->header){
+        if ($this->header) {
             return view($this->header)->render();
         }
     }
@@ -110,7 +111,7 @@ class FilamentDocsServices
 
     public function getFooter()
     {
-        if($this->footer){
+        if ($this->footer) {
             return view($this->footer)->render();
         }
     }
@@ -122,7 +123,7 @@ class FilamentDocsServices
 
     public function getCss()
     {
-        if($this->css){
+        if ($this->css) {
             return view($this->css)->render();
         }
     }

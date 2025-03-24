@@ -34,5 +34,5 @@ return [
     'views' => [
         'layout' => 'filament-docs::layout',
         'view' => 'filament-docs::print',
-    ]
+    ],
 ];

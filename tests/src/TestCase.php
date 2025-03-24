@@ -12,6 +12,7 @@ use Filament\Notifications\NotificationsServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
+use FilamentTiptapEditor\FilamentTiptapEditorServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\Attributes\WithEnv;
@@ -23,7 +24,6 @@ use TomatoPHP\FilamentDocs\FilamentDocsServiceProvider;
 use TomatoPHP\FilamentDocs\Services\Contracts\DocsVar;
 use TomatoPHP\FilamentDocs\Tests\Models\User;
 use TomatoPHP\FilamentIcons\FilamentIconsServiceProvider;
-use FilamentTiptapEditor\FilamentTiptapEditorServiceProvider;
 
 #[WithEnv('DB_CONNECTION', 'testing')]
 abstract class TestCase extends BaseTestCase

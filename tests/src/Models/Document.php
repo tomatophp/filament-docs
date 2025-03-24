@@ -19,9 +19,7 @@ use TomatoPHP\FilamentDocs\Tests\Database\Factories\DocumentFactory;
  */
 class Document extends Model
 {
-
     use HasFactory;
-
 
     /**
      * @var array
