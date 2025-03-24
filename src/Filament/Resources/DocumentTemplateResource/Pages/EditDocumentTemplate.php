@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages;
 
-use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource;
 
 class EditDocumentTemplate extends EditRecord
 {
@@ -34,9 +34,6 @@ class EditDocumentTemplate extends EditRecord
         return $data;
     }
 
-    /**
-     * @return void
-     */
     public function afterSave(): void
     {
         FilamentDocs::create($this->getRecord());

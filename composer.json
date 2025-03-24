@@ -18,7 +18,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "TomatoPHP\\FilamentDocs\\Tests\\": "tests/src",
+            "TomatoPHP\\FilamentDocs\\Tests\\Database\\Factories\\": "tests/database/factories"
         }
     },
     "extra": {
@@ -28,6 +29,21 @@
             ]
         }
     },
+    "scripts": {
+        "testbench": "vendor/bin/testbench package:discover --ansi",
+        "db": "vendor/bin/testbench package:create-sqlite-db && vendor/bin/testbench migrate",
+        "analyse": "vendor/bin/phpstan analyse src tests",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
     "authors": [
         {
             "name": "Fady Mondy",
@@ -35,10 +51,23 @@
         }
     ],
     "require": {
-        "php": "^8.1|^8.2",
+        "php": "^8.2|^8.3|^8.4",
         "tomatophp/console-helpers": "^1.1",
         "tomatophp/filament-icons": "^1.1",
-        "filament/filament": "^3.2",
-        "awcodes/filament-tiptap-editor": "^3.4"
-    }
+        "filament/filament": "^3.3",
+        "awcodes/filament-tiptap-editor": "^3.5"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.21",
+        "livewire/livewire": "^2.10|^3.0",
+        "nunomaduro/larastan": "^3.1",
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^3.7",
+        "pestphp/pest-plugin-laravel": "^3.1",
+        "pestphp/pest-plugin-livewire": "^3.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0"
+    },
+    "version": "2.0.4"
 }

@@ -2,22 +2,22 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Actions;
 
-
 use Closure;
 use Filament\Actions\Action;
 use Livewire\Component as Livewire;
 
 class PrintAction extends Action
 {
-    protected Closure|string $route;
-    protected Closure|string|null $title = null;
+    protected Closure | string $route;
+
+    protected Closure | string | null $title = null;
 
     public static function getDefaultName(): ?string
     {
         return 'print';
     }
 
-    public function route(Closure|string $route): self
+    public function route(Closure | string $route): self
     {
         $this->route = $route;
 
@@ -29,7 +29,7 @@ class PrintAction extends Action
         return $this->evaluate($this->route);
     }
 
-    public function title(Closure|string $title): self
+    public function title(Closure | string $title): self
     {
         $this->title = $title;
 

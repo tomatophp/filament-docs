@@ -2,16 +2,15 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources;
 
-use FilamentTiptapEditor\TiptapEditor;
-use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages;
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\RelationManagers;
-use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
+use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages;
+use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 use TomatoPHP\FilamentIcons\Components\IconColumn;
 use TomatoPHP\FilamentIcons\Components\IconPicker;
 
@@ -22,16 +21,13 @@ class DocumentTemplateResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-s-clipboard-document-list';
 
     protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?int $navigationSort = 3;
 
-    /**
-     * @return bool
-     */
     public static function isScopedToTenant(): bool
     {
         return filament('filament-docs')::$isScopedToTenant;
     }
-
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -43,9 +39,6 @@ class DocumentTemplateResource extends Resource
         return trans('filament-docs::messages.document-templates.title');
     }
 
-    /**
-     * @return string|null
-     */
     public static function getLabel(): ?string
     {
         return trans('filament-docs::messages.document-templates.single');
@@ -101,10 +94,10 @@ class DocumentTemplateResource extends Resource
 
         ];
 
-        if(filament('filament-docs')::$isScopedToTenant){
+        if (filament('filament-docs')::$isScopedToTenant) {
             $schema[] = Forms\Components\Select::make('team_id')
                 ->label(trans('filament-docs::messages.document-templates.form.team_id'))
-                ->visible(fn(Forms\Get $get) => $get('team_id') === null)
+                ->visible(fn (Forms\Get $get) => $get('team_id') === null)
                 ->default(filament()->getTenant()?->id)
                 ->relationship('team', 'name');
         }

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
-* @property DocumentTemplate $document_template_id
-* @property string $var
-* @property string $model
-* @property string $value
+ * @property DocumentTemplate $document_template_id
+ * @property string $var
+ * @property string $model
+ * @property string $value
  */
 class DocumentTemplateVar extends Model
 {
@@ -22,17 +22,13 @@ class DocumentTemplateVar extends Model
         'document_template_id',
         'var',
         'model',
-        'value'
+        'value',
     ];
 
     protected $casts = [
-        'value' => 'json'
+        'value' => 'json',
     ];
 
-
-    /**
-     * @return BelongsTo
-     */
     public function documentTemplate(): BelongsTo
     {
         return $this->belongsTo(\TomatoPHP\FilamentDocs\Models\DocumentTemplate::class);

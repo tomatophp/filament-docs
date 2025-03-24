@@ -17,6 +17,8 @@ Manage your documents and contracts all in one place with template builder
 - [x] Documents Filter By Template
 - [x] Print Document or Export as PDF
 - [x] Documents Relation Manager
+- [x] Custom Print Header & Footer
+- [x] Custom Print CSS
 
 ## Screenshots
 
@@ -99,6 +101,32 @@ public function boot()
 
 as you can see you can use data from selected table or from a static function
 
+
+## Add Fixed Header & Footer to Document Print
+
+
+if you like to add a fixed header and footer to your document print you can use this method on your `AppServiceProvider.php` file
+
+```php
+use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
+
+public function boot() {
+    FilamentDocs::header('filament.header');
+    FilamentDocs::footer('filament.footer');
+} 
+```
+
+## Custom CSS on Document Print
+
+if you like to add a custom css to your document print you can use this method on your `AppServiceProvider.php` file
+
+```php
+use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
+
+public function boot() {
+    FilamentDocs::css('filament.css');
+} 
+```
 
 ## Allow Tenants 
 

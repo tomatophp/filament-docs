@@ -9,49 +9,48 @@ use Livewire\Livewire;
 use TomatoPHP\FilamentDocs\Filament\RelationManager\DocumentRelationManager;
 use TomatoPHP\FilamentDocs\Services\FilamentDocsServices;
 
-
 class FilamentDocsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //Register generate command
+        // Register generate command
         $this->commands([
-           \TomatoPHP\FilamentDocs\Console\FilamentDocsInstall::class,
+            \TomatoPHP\FilamentDocs\Console\FilamentDocsInstall::class,
         ]);
 
-        //Register Config file
-        $this->mergeConfigFrom(__DIR__.'/../config/filament-docs.php', 'filament-docs');
+        // Register Config file
+        $this->mergeConfigFrom(__DIR__ . '/../config/filament-docs.php', 'filament-docs');
 
-        //Publish Config
+        // Publish Config
         $this->publishes([
-           __DIR__.'/../config/filament-docs.php' => config_path('filament-docs.php'),
+            __DIR__ . '/../config/filament-docs.php' => config_path('filament-docs.php'),
         ], 'filament-docs-config');
 
-        //Register Migrations
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        // Register Migrations
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-        //Publish Migrations
+        // Publish Migrations
         $this->publishes([
-           __DIR__.'/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'filament-docs-migrations');
-        //Register views
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-docs');
+        // Register views
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-docs');
 
-        //Publish Views
+        // Publish Views
         $this->publishes([
-           __DIR__.'/../resources/views' => resource_path('views/vendor/filament-docs'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-docs'),
         ], 'filament-docs-views');
 
-        //Register Langs
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-docs');
+        // Register Langs
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-docs');
 
-        //Publish Lang
+        // Publish Lang
         $this->publishes([
-           __DIR__.'/../resources/lang' => base_path('lang/vendor/filament-docs'),
+            __DIR__ . '/../resources/lang' => base_path('lang/vendor/filament-docs'),
         ], 'filament-docs-lang');
 
         $this->app->bind('filament-docs', function () {
-            return new FilamentDocsServices();
+            return new FilamentDocsServices;
         });
 
         Livewire::component('tomato-p-h-p.filament-docs.filament.relation-manager.document-relation-manager', DocumentRelationManager::class);
@@ -60,7 +59,7 @@ class FilamentDocsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         FilamentAsset::register([
-            Css::make('filament-docs', __DIR__.'/../publish/public/css/filament-docs.css')
+            Css::make('filament-docs', __DIR__ . '/../publish/public/css/filament-docs.css'),
         ], package: 'tomatophp/filament-docs');
     }
 }

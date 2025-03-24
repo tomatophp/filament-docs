@@ -28,7 +28,6 @@ class FilamentDocsInstall extends Command
         parent::__construct();
     }
 
-
     /**
      * Execute the console command.
      *
@@ -37,10 +36,10 @@ class FilamentDocsInstall extends Command
     public function handle()
     {
         $this->info('Publish Vendor Assets');
-        $this->artisanCommand(["migrate"]);
-        $this->artisanCommand(["optimize:clear"]);
-        $this->artisanCommand(["filament:optimize-clear"]);
-        $this->artisanCommand(["icon:cache"]);
+        $this->artisanCommand(['migrate']);
+        $this->artisanCommand(['optimize:clear']);
+        $this->artisanCommand(['filament:optimize-clear']);
+        $this->artisanCommand(['icon:cache']);
         $this->info('Filament Docs installed successfully.');
     }
 }

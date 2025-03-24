@@ -11,13 +11,11 @@ class DocumentRelationManager extends RelationManager
 {
     protected static string $relationship = 'documents';
 
-    /**
-     * @return string|null
-     */
     public static function getLabel(): ?string
     {
         return trans('filament-docs::messages.documents.title');
     }
+
     public function table(Table $table): Table
     {
         return DocumentResource::table($table);

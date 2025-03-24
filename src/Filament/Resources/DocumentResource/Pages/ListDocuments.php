@@ -2,9 +2,9 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages;
 
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource;
 
 class ListDocuments extends ListRecords
