@@ -17,7 +17,6 @@ class PrintDocument extends Page
         $this->record = $this->resolveRecord($record);
     }
 
-
     public function getLayout(): string
     {
         return config('filament-docs.views.layout') ?: 'filament-docs::layout';

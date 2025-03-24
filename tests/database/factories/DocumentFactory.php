@@ -3,9 +3,7 @@
 namespace TomatoPHP\FilamentDocs\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use TomatoPHP\FilamentDocs\Tests\Models\Document;
-use TomatoPHP\FilamentDocs\Tests\Models\User;
 
 class DocumentFactory extends Factory
 {
@@ -25,14 +23,14 @@ class DocumentFactory extends Factory
     public function withId($id)
     {
         return $this->state([
-            "document_template_id" => $id,
+            'document_template_id' => $id,
         ]);
     }
 
     public function withTeam($id)
     {
         return $this->state([
-            "team_id" => $id,
+            'team_id' => $id,
         ]);
     }
 }

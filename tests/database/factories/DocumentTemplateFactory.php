@@ -3,9 +3,7 @@
 namespace TomatoPHP\FilamentDocs\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use TomatoPHP\FilamentDocs\Tests\Models\DocumentTemplate;
-use TomatoPHP\FilamentDocs\Tests\Models\User;
 
 class DocumentTemplateFactory extends Factory
 {
@@ -18,7 +16,7 @@ class DocumentTemplateFactory extends Factory
             'body' => $this->faker->text(),
             'is_active' => $this->faker->boolean(),
             'icon' => 'heroicon-o-document-text',
-            'color' => $this->faker->word()
+            'color' => $this->faker->word(),
         ];
     }
 

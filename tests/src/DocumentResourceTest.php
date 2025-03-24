@@ -2,9 +2,6 @@
 
 namespace TomatoPHP\FilamentDocs\Tests;
 
-use Filament\Tables\Actions\EditAction;
-use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
-use TomatoPHP\FilamentDocs\Facades\FilamentTypes;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages;
 use TomatoPHP\FilamentDocs\Tests\Models\Document;
@@ -28,7 +25,7 @@ it('can render document resource', function () {
 it('can list documents', function () {
     Document::query()->delete();
     $template = DocumentTemplate::factory()->create();
-    $documents =  Document::factory()->count(10)->withId($template->id)->create();
+    $documents = Document::factory()->count(10)->withId($template->id)->create();
 
     livewire(Pages\ListDocuments::class)
         ->loadTable()
@@ -38,7 +35,7 @@ it('can list documents', function () {
 
 it('can render document type/for/key column in table', function () {
     $template = DocumentTemplate::factory()->create();
-    $documents =  Document::factory()->count(10)->withId($template->id)->create();
+    $documents = Document::factory()->count(10)->withId($template->id)->create();
 
     livewire(Pages\ListDocuments::class)
         ->loadTable()
@@ -76,7 +73,7 @@ it('can create new document', function () {
         ->fillForm([
             'document_template_id' => $template->id,
             'body' => [],
-            'ref' => $newData->ref
+            'ref' => $newData->ref,
         ])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -87,15 +84,13 @@ it('can create new document', function () {
     ]);
 });
 
-
-
 it('can validate document input', function () {
     livewire(Pages\CreateDocument::class)
         ->fillForm([
             'document_template_id' => null,
             'body' => null,
             'ref' => null,
-            'is_send' => null
+            'is_send' => null,
         ])
         ->call('create')
         ->assertHasFormErrors([
@@ -127,10 +122,10 @@ it('can retrieve document data', function () {
     livewire(Pages\EditDocument::class, [
         'record' => $document->getRouteKey(),
     ])
-    ->assertFormSet([
-        'document_template_id' => $document->document_template_id,
-        'ref' => $document->ref
-    ]);
+        ->assertFormSet([
+            'document_template_id' => $document->document_template_id,
+            'ref' => $document->ref,
+        ]);
 });
 
 it('can validate edit document input', function () {
@@ -144,11 +139,11 @@ it('can validate edit document input', function () {
             'document_template_id' => null,
             'body' => null,
             'ref' => null,
-            'is_send' => null
+            'is_send' => null,
         ])
         ->call('save')
         ->assertHasFormErrors([
-            'document_template_id' => 'required'
+            'document_template_id' => 'required',
         ]);
 });
 
@@ -160,13 +155,13 @@ it('can save document data', function () {
     livewire(Pages\EditDocument::class, [
         'record' => $document->getRouteKey(),
     ])
-    ->fillForm([
-        'document_template_id' => $template->id,
-        'body' => [],
-        'ref' => $newData->ref
-    ])
-    ->call('save')
-    ->assertHasNoFormErrors();
+        ->fillForm([
+            'document_template_id' => $template->id,
+            'body' => [],
+            'ref' => $newData->ref,
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
 
     expect($document->refresh())
         ->document_template_id->toBe($newData->document_template_id);
