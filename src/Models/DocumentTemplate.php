@@ -5,6 +5,7 @@ namespace TomatoPHP\FilamentDocs\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 /**
  * @property string $id
@@ -32,6 +33,13 @@ class DocumentTemplate extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (DocumentTemplate $template): void {
+            $template->body = Str::sanitizeHtml((string) $template->body);
+        });
+    }
 
     public function team(): BelongsTo
     {

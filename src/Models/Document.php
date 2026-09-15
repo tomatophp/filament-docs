@@ -4,6 +4,7 @@ namespace TomatoPHP\FilamentDocs\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 /**
  * @property string $id
@@ -33,6 +34,13 @@ class Document extends Model
     protected $casts = [
         'is_send' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Document $document): void {
+            $document->body = Str::sanitizeHtml((string) $document->body);
+        });
+    }
 
     public function model()
     {

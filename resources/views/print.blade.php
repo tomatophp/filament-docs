@@ -1,7 +1,3 @@
 <div>
-    @if(isset($record))
-        {!! $record->body !!}
-    @else
-        {!! $this->getRecord()->body !!}
-    @endif
+    {!! \Illuminate\Support\Str::sanitizeHtml((string) (isset($record) ? $record->body : $this->getRecord()->body)) !!}
 </div>
