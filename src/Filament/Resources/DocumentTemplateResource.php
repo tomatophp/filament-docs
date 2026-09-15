@@ -2,14 +2,29 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ColorColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
-use FilamentTiptapEditor\TiptapEditor;
 use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages\CreateDocumentTemplate;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages\EditDocumentTemplate;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentTemplateResource\Pages\ListDocumentTemplates;
 use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 use TomatoPHP\FilamentIcons\Components\IconColumn;
 use TomatoPHP\FilamentIcons\Components\IconPicker;
@@ -18,7 +33,7 @@ class DocumentTemplateResource extends Resource
 {
     protected static ?string $model = DocumentTemplate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-clipboard-document-list';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-s-clipboard-document-list';
 
     protected static ?string $recordTitleAttribute = 'id';
 
@@ -54,7 +69,7 @@ class DocumentTemplateResource extends Resource
         return trans('filament-docs::messages.document-templates.title');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
 
         $keys = array_merge(
@@ -69,63 +84,63 @@ class DocumentTemplateResource extends Resource
         );
 
         $schema = [
-            Forms\Components\TextInput::make('name')
+            TextInput::make('name')
                 ->label(trans('filament-docs::messages.document-templates.form.name'))
                 ->required()
                 ->columnSpanFull()
                 ->maxLength(255),
-            Forms\Components\KeyValue::make('vars')
+            KeyValue::make('vars')
                 ->disabled()
                 ->valueLabel(trans('filament-docs::messages.document-templates.form.vars-label'))
                 ->keyLabel(trans('filament-docs::messages.document-templates.form.vars-key'))
                 ->label(trans('filament-docs::messages.document-templates.form.vars'))
                 ->columnSpanFull()
                 ->default($keys),
-            TiptapEditor::make('body')
+            RichEditor::make('body')
                 ->label(trans('filament-docs::messages.document-templates.form.body'))
                 ->required()
                 ->columnSpanFull(),
             IconPicker::make('icon')
                 ->label(trans('filament-docs::messages.document-templates.form.icon')),
-            Forms\Components\ColorPicker::make('color')
+            ColorPicker::make('color')
                 ->label(trans('filament-docs::messages.document-templates.form.color')),
-            Forms\Components\Toggle::make('is_active')
+            Toggle::make('is_active')
                 ->label(trans('filament-docs::messages.document-templates.form.is_active')),
 
         ];
 
         if (filament('filament-docs')::$isScopedToTenant) {
-            $schema[] = Forms\Components\Select::make('team_id')
+            $schema[] = Select::make('team_id')
                 ->label(trans('filament-docs::messages.document-templates.form.team_id'))
-                ->visible(fn (Forms\Get $get) => $get('team_id') === null)
+                ->visible(fn (Get $get) => $get('team_id') === null)
                 ->default(filament()->getTenant()?->id)
                 ->relationship('team', 'name');
         }
 
         return $form
-            ->schema($schema);
+            ->components($schema);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(trans('filament-docs::messages.document-templates.form.name'))
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('is_active')
+                ToggleColumn::make('is_active')
                     ->label(trans('filament-docs::messages.document-templates.form.is_active')),
                 IconColumn::make('icon')
                     ->label(trans('filament-docs::messages.document-templates.form.icon'))
                     ->searchable(),
-                Tables\Columns\ColorColumn::make('color')
+                ColorColumn::make('color')
                     ->label(trans('filament-docs::messages.document-templates.form.color'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -133,23 +148,23 @@ class DocumentTemplateResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::view.single.label')),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::edit.single.label')),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::delete.single.label')),
-                Tables\Actions\ReplicateAction::make()
+                ReplicateAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::replicate.single.label')),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -162,9 +177,9 @@ class DocumentTemplateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDocumentTemplates::route('/'),
-            'create' => Pages\CreateDocumentTemplate::route('/create'),
-            'edit' => Pages\EditDocumentTemplate::route('/{record}/edit'),
+            'index' => ListDocumentTemplates::route('/'),
+            'create' => CreateDocumentTemplate::route('/create'),
+            'edit' => EditDocumentTemplate::route('/{record}/edit'),
         ];
     }
 }

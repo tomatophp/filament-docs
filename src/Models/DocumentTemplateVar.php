@@ -31,6 +31,6 @@ class DocumentTemplateVar extends Model
 
     public function documentTemplate(): BelongsTo
     {
-        return $this->belongsTo(\TomatoPHP\FilamentDocs\Models\DocumentTemplate::class);
+        return $this->belongsTo(DocumentTemplate::class);
     }
 }

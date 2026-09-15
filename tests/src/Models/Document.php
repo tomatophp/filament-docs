@@ -5,6 +5,7 @@ namespace TomatoPHP\FilamentDocs\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 use TomatoPHP\FilamentDocs\Tests\Database\Factories\DocumentFactory;
 
 /**
@@ -45,7 +46,7 @@ class Document extends Model
 
     public function documentTemplate(): BelongsTo
     {
-        return $this->belongsTo(\TomatoPHP\FilamentDocs\Models\DocumentTemplate::class, 'document_template_id');
+        return $this->belongsTo(DocumentTemplate::class, 'document_template_id');
     }
 
     public function team(): BelongsTo

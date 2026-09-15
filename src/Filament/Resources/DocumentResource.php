@@ -2,15 +2,33 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Forms\Form;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use FilamentTiptapEditor\TiptapEditor;
 use TomatoPHP\FilamentDocs\Facades\FilamentDocs;
 use TomatoPHP\FilamentDocs\Filament\Actions\Table\PrintAction;
-use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages\CreateDocument;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages\EditDocument;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages\ListDocuments;
+use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages\PrintDocument;
 use TomatoPHP\FilamentDocs\Models\Document;
 use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 
@@ -18,7 +36,7 @@ class DocumentResource extends Resource
 {
     protected static ?string $model = Document::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'id';
 
@@ -49,16 +67,16 @@ class DocumentResource extends Resource
         return trans('filament-docs::messages.documents.title');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         $schema = [
-            Forms\Components\Select::make('document_template_id')
+            Select::make('document_template_id')
                 ->preload()
                 ->label(trans('filament-docs::messages.documents.form.document_template_id'))
                 ->searchable()
                 ->relationship('documentTemplate', 'name')
                 ->live()
-                ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, $record) {
+                ->afterStateUpdated(function (Get $get, Set $set, $record) {
                     if (! $record) {
                         $documentTemplate = DocumentTemplate::query()->find($get('document_template_id'));
                         if ($documentTemplate) {
@@ -81,30 +99,31 @@ class DocumentResource extends Resource
                 })
                 ->columnSpanFull()
                 ->required(),
-            Forms\Components\Section::make(trans('filament-docs::messages.documents.form.document'))
-                ->hidden(fn (Forms\Get $get) => (! $get('document_template_id')) || ! $get('body'))
+            Section::make(trans('filament-docs::messages.documents.form.document'))
+                ->hidden(fn (Get $get) => (! $get('document_template_id')) || ! $get('body'))
                 ->schema(function ($record) {
                     if ($record) {
                         return [
-                            TiptapEditor::make('body')
+                            RichEditor::make('body')
                                 ->label(trans('filament-docs::messages.documents.form.body'))
+                                ->columnSpanFull()
                                 ->required(),
                         ];
                     } else {
                         return [
-                            Forms\Components\Repeater::make('body')
-                                ->hidden(fn ($record, Forms\Get $get) => $record || ! $get('body'))
+                            Repeater::make('body')
+                                ->hidden(fn ($record, Get $get) => $record || ! $get('body'))
                                 ->schema([
-                                    Forms\Components\Hidden::make('var')->live(),
-                                    Forms\Components\Hidden::make('model')->live(),
-                                    Forms\Components\Hidden::make('key')->live(),
-                                    Forms\Components\TextInput::make('label')
+                                    Hidden::make('var')->live(),
+                                    Hidden::make('model')->live(),
+                                    Hidden::make('key')->live(),
+                                    TextInput::make('label')
                                         ->disabled()
                                         ->label(trans('filament-docs::messages.documents.form.var-label')),
-                                    Forms\Components\Select::make('value')
+                                    Select::make('value')
                                         ->label(trans('filament-docs::messages.documents.form.var-value'))
                                         ->searchable()
-                                        ->options(function (Forms\Get $get) {
+                                        ->options(function (Get $get) {
                                             if ($get('model') && $get('var')) {
                                                 return $get('model')::query()->pluck(FilamentDocs::load()->where('key', $get('var'))->first()?->column, 'id')->toArray();
                                             } else {
@@ -112,7 +131,7 @@ class DocumentResource extends Resource
                                             }
                                         })
                                         ->live()
-                                        ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                        ->afterStateUpdated(function (Get $get, Set $set) {
                                             $body = [];
                                             $groups = [];
                                             foreach ($get('../../body') as $item) {
@@ -143,51 +162,51 @@ class DocumentResource extends Resource
                     }
 
                 }),
-            Forms\Components\TextInput::make('ref')
+            TextInput::make('ref')
                 ->columnSpanFull()
                 ->nullable(),
         ];
 
         if (filament('filament-docs')::$isScopedToTenant) {
-            $schema[] = Forms\Components\Select::make('team_id')
+            $schema[] = Select::make('team_id')
                 ->label(trans('filament-docs::messages.documents.form.team_id'))
-                ->visible(fn (Forms\Get $get) => $get('team_id') === null)
+                ->visible(fn (Get $get) => $get('team_id') === null)
                 ->default(filament()->getTenant()?->id)
                 ->relationship('team', 'name');
         }
 
         return $form
-            ->schema($schema);
+            ->components($schema);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->searchable()
                     ->prefix('#')
                     ->label(trans('filament-docs::messages.documents.form.id'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ref')
+                TextColumn::make('ref')
                     ->searchable()
                     ->label(trans('filament-docs::messages.documents.form.ref'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('documentTemplate.name')
+                TextColumn::make('documentTemplate.name')
                     ->badge()
                     ->color('warning')
                     ->icon(fn ($record) => $record->documentTemplate->icon)
                     ->label(trans('filament-docs::messages.documents.form.document_template_id'))
                     ->url(fn ($record) => DocumentTemplateResource::getUrl('edit', ['record' => $record->documentTemplate->id]))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('model' . config('filament-docs.displayname_attribute'))
+                TextColumn::make('model' . config('filament-docs.displayname_attribute'))
                     ->label(trans('filament-docs::messages.documents.form.model'))
                     ->badge()
                     ->color('info')
                     ->icon(function ($record) {
-                        $resources = filament()->getCurrentPanel()->getResources();
+                        $resources = filament()->getCurrentOrDefaultPanel()->getResources();
                         foreach ($resources as $item) {
                             $resourceClass = app($item);
                             if ($resourceClass->getModel() === $record->model_type) {
@@ -196,39 +215,39 @@ class DocumentResource extends Resource
                         }
                     })
                     ->url(function ($record) {
-                        $resources = filament()->getCurrentPanel()->getResources();
+                        $resources = filament()->getCurrentOrDefaultPanel()->getResources();
                         foreach ($resources as $item) {
                             $resourceClass = app($item);
                             if ($resourceClass->getModel() === $record->model_type) {
                                 try {
                                     return $resourceClass::getUrl('edit', ['record' => $record->model_id]);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     return '#';
                                 }
                             }
                         }
                     })
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('is_send')
+                ToggleColumn::make('is_send')
                     ->label(trans('filament-docs::messages.documents.form.is_send')),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('document_template_id')
+                SelectFilter::make('document_template_id')
                     ->label(trans('filament-docs::messages.documents.form.document_template_id'))
                     ->searchable()
                     ->options(DocumentTemplate::query()->where('is_active', 1)->pluck('name', 'id')->toArray()),
             ])
-            ->actions([
-                Tables\Actions\Action::make('view')
+            ->recordActions([
+                Action::make('view')
                     ->color('info')
                     ->modalContent(fn ($record) => view('filament-docs::print', [
                         'record' => $record,
@@ -240,24 +259,24 @@ class DocumentResource extends Resource
                     ->icon('heroicon-s-printer')
                     ->title(fn ($record) => $record->documentTemplate->name . '#' . $record->id)
                     ->route(
-                        fn ($record) => Pages\PrintDocument::getUrl(['record' => $record])
+                        fn ($record) => PrintDocument::getUrl(['record' => $record])
                     )
                     ->color('warning')
                     ->iconButton()
                     ->tooltip(trans('filament-docs::messages.documents.actions.print')),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::edit.single.label')),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::delete.single.label')),
-                Tables\Actions\ReplicateAction::make()
+                ReplicateAction::make()
                     ->iconButton()
                     ->tooltip(__('filament-actions::replicate.single.label')),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -272,10 +291,10 @@ class DocumentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDocuments::route('/'),
-            'create' => Pages\CreateDocument::route('/create'),
-            'edit' => Pages\EditDocument::route('/{record}/edit'),
-            'print' => Pages\PrintDocument::route('/{record}/print'),
+            'index' => ListDocuments::route('/'),
+            'create' => CreateDocument::route('/create'),
+            'edit' => EditDocument::route('/{record}/edit'),
+            'print' => PrintDocument::route('/{record}/print'),
         ];
     }
 }

@@ -3,7 +3,8 @@
 namespace TomatoPHP\FilamentDocs\Filament\Actions\Table;
 
 use Closure;
-use Filament\Tables\Actions\Action;
+use Filament\Actions\Action;
+use Illuminate\Support\Js;
 use Livewire\Component as Livewire;
 
 class PrintAction extends Action
@@ -49,15 +50,18 @@ class PrintAction extends Action
             ->label(trans('filament-docs::messages.documents.actions.print'))
             ->icon('heroicon-o-printer')
             ->action(function (Livewire $livewire) {
+                $title = Js::from((string) $this->getTitle());
+                $route = Js::from((string) $this->getRoute());
+
                 $livewire->js(
                     <<<JS
                         let iframe = document.createElement('iframe');
                         let orginalTitle = document.title;
-                        let title = "{$this->getTitle()}";
+                        let title = {$title};
                         if (title) {
                             document.title = title;
                         }
-                        iframe.src = '{$this->getRoute()}';
+                        iframe.src = {$route};
                         iframe.style.display = 'none';
                         document.body.appendChild(iframe);
                         iframe.onload = function () {

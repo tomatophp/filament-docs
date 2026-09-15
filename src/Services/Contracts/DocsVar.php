@@ -2,6 +2,8 @@
 
 namespace TomatoPHP\FilamentDocs\Services\Contracts;
 
+use Closure;
+
 class DocsVar
 {
     public string $key;
@@ -12,7 +14,7 @@ class DocsVar
 
     public ?string $column = null;
 
-    public string | null | \Closure $value = null;
+    public string | null | Closure $value = null;
 
     public static function make(string $key): static
     {
@@ -62,7 +64,7 @@ class DocsVar
     /**
      * @return $this
      */
-    public function value(string | \Closure | null $value): static
+    public function value(string | Closure | null $value): static
     {
         $this->value = $value;
 

@@ -4,6 +4,7 @@ namespace TomatoPHP\FilamentDocs\Tests;
 
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages;
+use TomatoPHP\FilamentDocs\Models\DocumentTemplateVar;
 use TomatoPHP\FilamentDocs\Tests\Models\Document;
 use TomatoPHP\FilamentDocs\Tests\Models\DocumentTemplate;
 use TomatoPHP\FilamentDocs\Tests\Models\User;
@@ -15,7 +16,7 @@ use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
-    actingAs(User::factory()->create());
+    actingAs($this->user = User::factory()->create());
 });
 
 it('can render document resource', function () {
@@ -35,7 +36,7 @@ it('can list documents', function () {
 
 it('can render document type/for/key column in table', function () {
     $template = DocumentTemplate::factory()->create();
-    $documents = Document::factory()->count(10)->withId($template->id)->create();
+    Document::factory()->count(10)->withId($template->id)->create();
 
     livewire(Pages\ListDocuments::class)
         ->loadTable()
@@ -45,24 +46,35 @@ it('can render document type/for/key column in table', function () {
         ->assertCanRenderTableColumn('documentTemplate.name');
 });
 
+it('can filter documents by template', function () {
+    $template = DocumentTemplate::factory()->create(['is_active' => true]);
+    $otherTemplate = DocumentTemplate::factory()->create(['is_active' => true]);
+    $documents = Document::factory()->count(2)->withId($template->id)->create();
+    $otherDocuments = Document::factory()->count(2)->withId($otherTemplate->id)->create();
+
+    livewire(Pages\ListDocuments::class)
+        ->filterTable('document_template_id', $template->id)
+        ->assertCanSeeTableRecords($documents)
+        ->assertCanNotSeeTableRecords($otherDocuments);
+});
+
 it('can render document list page', function () {
     livewire(Pages\ListDocuments::class)->assertSuccessful();
 });
 
-it('can render view document page', function () {
+it('can render the view document table action', function () {
     $template = DocumentTemplate::factory()->create();
+    $document = Document::factory()->withId($template->id)->create();
 
-    livewire(Pages\ListDocuments::class, [
-        'record' => Document::factory()->withId($template->id)->create(),
-    ])
-        ->mountAction('view')
+    livewire(Pages\ListDocuments::class)
+        ->mountTableAction('view', $document)
         ->assertSuccessful();
 });
 
 it('can render document create page', function () {
-    livewire(Pages\ListDocuments::class)
-        ->mountAction('create')
-        ->assertSuccessful();
+    get(DocumentResource::getUrl('create'))->assertSuccessful();
+
+    livewire(Pages\CreateDocument::class)->assertSuccessful();
 });
 
 it('can create new document', function () {
@@ -84,6 +96,53 @@ it('can create new document', function () {
     ]);
 });
 
+it('creates a document from a template and replaces its vars', function () {
+    $template = DocumentTemplate::factory()->create([
+        'body' => '<p>Dear $USER_ID</p><p>Ref $UUID</p>',
+    ]);
+
+    DocumentTemplateVar::query()->create([
+        'document_template_id' => $template->id,
+        'var' => '$USER_ID',
+        'model' => User::class,
+        'value' => 'name',
+    ]);
+
+    livewire(Pages\CreateDocument::class)
+        ->fillForm([
+            'document_template_id' => $template->id,
+        ])
+        ->assertSchemaStateSet(fn (array $state): array => [
+            'body' => [
+                array_key_first($state['body']) => [
+                    'var' => '$USER_ID',
+                    'label' => 'User ID',
+                    'key' => 'name',
+                    'value' => '',
+                    'model' => User::class,
+                ],
+            ],
+        ])
+        ->fillForm(fn (array $state): array => [
+            'body' => [
+                array_key_first($state['body']) => [
+                    ...$state['body'][array_key_first($state['body'])],
+                    'value' => $this->user->id,
+                ],
+            ],
+            'ref' => 'CONTRACT-1',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $document = Document::query()->where('ref', 'CONTRACT-1')->firstOrFail();
+
+    expect($document->body)
+        ->toContain('Dear ' . $this->user->name)
+        ->not->toContain('$USER_ID')
+        ->not->toContain('$UUID');
+});
+
 it('can validate document input', function () {
     livewire(Pages\CreateDocument::class)
         ->fillForm([
@@ -96,16 +155,6 @@ it('can validate document input', function () {
         ->assertHasFormErrors([
             'document_template_id' => 'required',
         ]);
-});
-
-it('can render document edit action', function () {
-    $template = DocumentTemplate::factory()->create();
-
-    livewire(Pages\ListDocuments::class, [
-        'record' => Document::factory()->withId($template->id)->create(),
-    ])
-        ->mountAction('edit')
-        ->assertSuccessful();
 });
 
 it('can render document edit page', function () {
@@ -122,7 +171,7 @@ it('can retrieve document data', function () {
     livewire(Pages\EditDocument::class, [
         'record' => $document->getRouteKey(),
     ])
-        ->assertFormSet([
+        ->assertSchemaStateSet([
             'document_template_id' => $document->document_template_id,
             'ref' => $document->ref,
         ]);
@@ -137,9 +186,7 @@ it('can validate edit document input', function () {
     ])
         ->fillForm([
             'document_template_id' => null,
-            'body' => null,
             'ref' => null,
-            'is_send' => null,
         ])
         ->call('save')
         ->assertHasFormErrors([
@@ -150,21 +197,22 @@ it('can validate edit document input', function () {
 it('can save document data', function () {
     $template = DocumentTemplate::factory()->create();
     $document = Document::factory()->withId($template->id)->create();
-    $newData = Document::factory()->withId($template->id)->make();
 
     livewire(Pages\EditDocument::class, [
         'record' => $document->getRouteKey(),
     ])
         ->fillForm([
             'document_template_id' => $template->id,
-            'body' => [],
-            'ref' => $newData->ref,
+            'body' => '<h2>Edited</h2><ul><li>One</li></ul>',
+            'ref' => 'EDITED-REF',
         ])
         ->call('save')
         ->assertHasNoFormErrors();
 
     expect($document->refresh())
-        ->document_template_id->toBe($newData->document_template_id);
+        ->document_template_id->toBe($template->id)
+        ->ref->toBe('EDITED-REF')
+        ->body->toContain('<h2>Edited</h2>', '<ul>', 'One');
 });
 
 it('can delete document', function () {

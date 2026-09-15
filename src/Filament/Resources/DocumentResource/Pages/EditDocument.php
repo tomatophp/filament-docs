@@ -2,7 +2,7 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use TomatoPHP\FilamentDocs\Filament\Actions\PrintAction;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
@@ -14,7 +14,7 @@ class EditDocument extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
             PrintAction::make()
                 ->title($this->getRecord()->ref ?: $this->getRecord()->documentTemplate->name)
                 ->route(PrintDocument::getUrl(['record' => $this->getRecord()])),

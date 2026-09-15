@@ -5,7 +5,7 @@ namespace TomatoPHP\FilamentDocs\Tests;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->plugin(
                 FilamentDocsPlugin::make()

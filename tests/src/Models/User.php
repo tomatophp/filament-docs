@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use TomatoPHP\FilamentDocs\Tests\Database\Factories\UserFactory;
+use TomatoPHP\FilamentDocs\Traits\InteractsWithDocs;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use HasFactory;
+    use InteractsWithDocs;
     use Notifiable;
 
     protected $guarded = [];

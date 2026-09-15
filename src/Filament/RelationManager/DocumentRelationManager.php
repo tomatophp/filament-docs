@@ -2,8 +2,8 @@
 
 namespace TomatoPHP\FilamentDocs\Filament\RelationManager;
 
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use TomatoPHP\FilamentDocs\Filament\Resources\DocumentResource;
 
@@ -21,8 +21,8 @@ class DocumentRelationManager extends RelationManager
         return DocumentResource::table($table);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return DocumentResource::form($form);
+        return DocumentResource::form($schema);
     }
 }

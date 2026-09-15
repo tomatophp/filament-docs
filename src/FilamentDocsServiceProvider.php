@@ -2,10 +2,9 @@
 
 namespace TomatoPHP\FilamentDocs;
 
-use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
+use TomatoPHP\FilamentDocs\Console\FilamentDocsInstall;
 use TomatoPHP\FilamentDocs\Filament\RelationManager\DocumentRelationManager;
 use TomatoPHP\FilamentDocs\Services\FilamentDocsServices;
 
@@ -15,7 +14,7 @@ class FilamentDocsServiceProvider extends ServiceProvider
     {
         // Register generate command
         $this->commands([
-            \TomatoPHP\FilamentDocs\Console\FilamentDocsInstall::class,
+            FilamentDocsInstall::class,
         ]);
 
         // Register Config file
@@ -33,6 +32,7 @@ class FilamentDocsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'filament-docs-migrations');
+
         // Register views
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-docs');
 
@@ -49,17 +49,13 @@ class FilamentDocsServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/lang' => base_path('lang/vendor/filament-docs'),
         ], 'filament-docs-lang');
 
-        $this->app->bind('filament-docs', function () {
+        $this->app->singleton('filament-docs', function () {
             return new FilamentDocsServices;
         });
-
-        Livewire::component('tomato-p-h-p.filament-docs.filament.relation-manager.document-relation-manager', DocumentRelationManager::class);
     }
 
     public function boot(): void
     {
-        FilamentAsset::register([
-            Css::make('filament-docs', __DIR__ . '/../publish/public/css/filament-docs.css'),
-        ], package: 'tomatophp/filament-docs');
+        Livewire::component('tomato-p-h-p.filament-docs.filament.relation-manager.document-relation-manager', DocumentRelationManager::class);
     }
 }

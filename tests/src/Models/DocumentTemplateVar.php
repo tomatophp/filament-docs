@@ -5,6 +5,7 @@ namespace TomatoPHP\FilamentDocs\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use TomatoPHP\FilamentDocs\Models\DocumentTemplate;
 use TomatoPHP\FilamentDocs\Tests\Database\Factories\DocumentTemplateVarFactory;
 
 /**
@@ -34,7 +35,7 @@ class DocumentTemplateVar extends Model
 
     public function documentTemplate(): BelongsTo
     {
-        return $this->belongsTo(\TomatoPHP\FilamentDocs\Models\DocumentTemplate::class);
+        return $this->belongsTo(DocumentTemplate::class);
     }
 
     protected static function newFactory(): DocumentTemplateVarFactory

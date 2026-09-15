@@ -11,10 +11,18 @@
 
 Manage your documents and contracts all in one place with template builder
 
+## Version Compatibility
+
+| Plugin | Filament | Laravel | PHP |
+|--------|----------|---------|-----|
+| 5.x    | 5.x      | 12.x - 13.x | 8.2+ |
+| 2.x    | 3.x      | 10.x - 11.x | 8.1+ |
+
 ## Features
 
 - [x] Generate Documents From Template
-- [x] Build Template using Tiptop Editor
+- [x] Build Template using Filament Rich Editor
+- [x] Self-contained styled print page (no CDN)
 - [x] Add Custom Vars By Facade
 - [x] Generate Documents Action
 - [x] Documents Filter By Template
@@ -42,7 +50,7 @@ Manage your documents and contracts all in one place with template builder
 ## Installation
 
 ```bash
-composer require tomatophp/filament-docs
+composer require tomatophp/filament-docs:^5.0
 ```
 after install your package please run this command
 
@@ -50,7 +58,7 @@ after install your package please run this command
 php artisan filament-docs:install
 ```
 
-if you are not using this package as a plugin please register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
+then register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
 
 ```php
 ->plugin(
@@ -121,6 +129,7 @@ public function boot() {
 
 ## Custom CSS on Document Print
 
+the print page ships its own stylesheet (headings, lists, tables, blockquotes, code) and loads nothing from a CDN.
 if you like to add a custom css to your document print you can use this method on your `AppServiceProvider.php` file
 
 ```php

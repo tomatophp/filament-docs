@@ -41,7 +41,7 @@ class Document extends Model
 
     public function documentTemplate(): BelongsTo
     {
-        return $this->belongsTo(\TomatoPHP\FilamentDocs\Models\DocumentTemplate::class, 'document_template_id');
+        return $this->belongsTo(DocumentTemplate::class, 'document_template_id');
     }
 
     public function team(): BelongsTo

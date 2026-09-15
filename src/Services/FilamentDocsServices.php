@@ -3,6 +3,7 @@
 namespace TomatoPHP\FilamentDocs\Services;
 
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -79,7 +80,7 @@ class FilamentDocsServices
             foreach ($fixedVars as $item) {
                 if (! is_array($item)) {
                     $value = '';
-                    if ($item->value instanceof \Closure) {
+                    if ($item->value instanceof Closure) {
                         $value = call_user_func($item->value);
                     } else {
                         $value = $item->value;
@@ -126,5 +127,4 @@ class FilamentDocsServices
         if ($this->css) {
             return view($this->css)->render();
         }
-    }
-}
+    }}
