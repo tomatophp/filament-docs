@@ -97,6 +97,9 @@ it('can create new document', function () {
 });
 
 it('creates a document from a template and replaces its vars', function () {
+    // A fixed name: the saved body is sanitized, which HTML-encodes characters such as the apostrophe in "O'Connor".
+    $this->user->update(['name' => 'Jane Doe']);
+
     $template = DocumentTemplate::factory()->create([
         'body' => '<p>Dear $USER_ID</p><p>Ref $UUID</p>',
     ]);

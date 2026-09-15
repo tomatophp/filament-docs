@@ -2,10 +2,12 @@
 
 namespace TomatoPHP\FilamentDocs\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use TomatoPHP\FilamentDocs\Database\Factories\DocumentTemplateFactory;
 
 /**
  * @property string $id
@@ -17,6 +19,14 @@ use Illuminate\Support\Str;
  */
 class DocumentTemplate extends Model
 {
+    /** @use HasFactory<DocumentTemplateFactory> */
+    use HasFactory;
+
+    protected static function newFactory(): DocumentTemplateFactory
+    {
+        return DocumentTemplateFactory::new();
+    }
+
     /**
      * @var array
      */
