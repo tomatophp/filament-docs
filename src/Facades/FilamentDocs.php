@@ -14,7 +14,8 @@ use TomatoPHP\FilamentDocs\Services\Contracts\DocsVar;
  * @method static string body(int $template, ?array $vars=[])
  * @method static void header(string $view)
  * @method static void footer(string $view)
- * @method static void css(string $view) */
+ * @method static void css(string $view)
+ * @method static string getPrintCss() */
 class FilamentDocs extends Facade
 {
     protected static function getFacadeAccessor(): string

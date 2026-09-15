@@ -1,0 +1,1 @@
+<small>Company Footer</small>

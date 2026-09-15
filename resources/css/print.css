@@ -1,0 +1,175 @@
+/* filament-docs print stylesheet: self-contained, no CDN, no build step. */
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    color: #111827;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.fd-document {
+    padding: 1.5rem;
+    overflow-wrap: break-word;
+}
+
+.fd-document > :first-child {
+    margin-top: 0;
+}
+
+.fd-document h1, .fd-document h2, .fd-document h3,
+.fd-document h4, .fd-document h5, .fd-document h6 {
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 1.5em 0 0.5em;
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+.fd-document h1 { font-size: 2em; }
+.fd-document h2 { font-size: 1.6em; }
+.fd-document h3 { font-size: 1.3em; }
+.fd-document h4 { font-size: 1.1em; }
+.fd-document h5 { font-size: 1em; }
+.fd-document h6 { font-size: 0.9em; color: #4b5563; }
+
+.fd-document p {
+    margin: 0 0 1em;
+}
+
+.fd-document ul, .fd-document ol {
+    margin: 0 0 1em;
+    padding-inline-start: 1.75em;
+}
+
+.fd-document ul { list-style: disc outside; }
+.fd-document ul ul { list-style-type: circle; }
+.fd-document ul ul ul { list-style-type: square; }
+.fd-document ol { list-style: decimal outside; }
+.fd-document ol ol { list-style-type: lower-alpha; }
+.fd-document ol ol ol { list-style-type: lower-roman; }
+
+.fd-document li {
+    display: list-item;
+    margin: 0.25em 0;
+}
+
+.fd-document li > p {
+    margin: 0;
+}
+
+.fd-document table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1em;
+    page-break-inside: auto;
+}
+
+.fd-document tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.fd-document th, .fd-document td {
+    border: 1px solid #9ca3af;
+    padding: 0.4em 0.6em;
+    text-align: start;
+    vertical-align: top;
+}
+
+.fd-document th {
+    background: #f3f4f6;
+    font-weight: 700;
+}
+
+.fd-document td > p, .fd-document th > p {
+    margin: 0;
+}
+
+.fd-document blockquote {
+    margin: 0 0 1em;
+    padding: 0.25em 1em;
+    border-inline-start: 4px solid #d1d5db;
+    color: #374151;
+}
+
+.fd-document hr {
+    border: 0;
+    border-top: 1px solid #d1d5db;
+    margin: 1.5em 0;
+}
+
+.fd-document a {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.fd-document strong, .fd-document b { font-weight: 700; }
+.fd-document em, .fd-document i { font-style: italic; }
+.fd-document u { text-decoration: underline; }
+.fd-document s, .fd-document del { text-decoration: line-through; }
+
+.fd-document code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: #f3f4f6;
+    border-radius: 3px;
+    padding: 0.1em 0.3em;
+}
+
+.fd-document pre {
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.75em 1em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    margin: 0 0 1em;
+}
+
+.fd-document pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.fd-document img {
+    max-width: 100%;
+    height: auto;
+}
+
+.fd-document .break {
+    page-break-before: always;
+    break-before: page;
+}
+
+.fd-header, .fd-footer {
+    text-align: center;
+    padding: 0.5rem;
+    background: #ffffff;
+}
+
+@media print {
+    .fd-header, .fd-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+    }
+
+    .fd-header { top: 0; }
+    .fd-footer { bottom: 0; }
+
+    .fd-document a {
+        color: inherit;
+    }
+}

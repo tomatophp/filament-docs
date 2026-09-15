@@ -127,4 +127,13 @@ class FilamentDocsServices
         if ($this->css) {
             return view($this->css)->render();
         }
-    }}
+    }
+
+    /**
+     * The self-contained stylesheet used by the print layout (no CDN).
+     */
+    public function getPrintCss(): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../resources/css/print.css');
+    }
+}
