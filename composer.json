@@ -2,6 +2,12 @@
     "name": "tomatophp/filament-docs",
     "type": "library",
     "description": "Manage your documents and contracts all in one place with template builder",
+    "homepage": "https://tomatophp.com/en/plugins/filament-docs",
+    "support": {
+        "issues": "https://github.com/tomatophp/filament-docs/issues",
+        "source": "https://github.com/tomatophp/filament-docs",
+        "docs": "https://tomatophp.com/en/plugins/filament-docs"
+    },
     "keywords": [
         "php",
         "laravel",
